@@ -14,7 +14,8 @@ import java.time.LocalDateTime;
 @Entity
 public class Message {
     @Id
-    private int id;
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private Integer id;
     @ManyToOne
     @JoinColumn(name = "chat_id", referencedColumnName = "id")
     private Chat chat;
@@ -22,7 +23,7 @@ public class Message {
     @JoinColumn(name = "author_id", referencedColumnName = "id")
     private User author;
     @NotNull
-    @Size(min = 1, max = 100)
+    @Size(min = 1, max = 120, message = "Сообщение должно содержать как минимум 1 символ, максимум - 120 символов")
     @Column(name = "message_text")
     private String text;
     @CreationTimestamp()

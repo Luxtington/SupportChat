@@ -3,7 +3,9 @@ create table IF NOT EXISTS user (
     surname varchar(30) NOT NULL,
     name varchar(15) NOT NULL,
     patronymic varchar(20),
-    age int CHECK (age > 0),
+    birthday_date int CHECK (birthday_date BETWEEN 1910 AND 2025),
+    username varchar(15) NOT NULL,
+    password varchar(15) NOT NULL,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 )
 
