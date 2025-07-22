@@ -14,7 +14,7 @@ import java.time.LocalDateTime;
 @Entity
 public class Message {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
     @ManyToOne
     @JoinColumn(name = "chat_id", referencedColumnName = "id")

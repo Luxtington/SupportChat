@@ -5,18 +5,21 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.luxtington.Chat.exception.UserNotFoundException;
 import ru.luxtington.Chat.model.User;
+import ru.luxtington.Chat.repository.RoleRepository;
 import ru.luxtington.Chat.repository.UserRepository;
 
 import java.util.List;
-import java.util.function.Supplier;
 
 @Service
 public class UserService {
+
     private final UserRepository userRepository;
+    private final RoleRepository roleRepository;
 
     @Autowired
-    public UserService(UserRepository userRepository) {
+    public UserService(UserRepository userRepository, RoleRepository roleRepository) {
         this.userRepository = userRepository;
+        this.roleRepository = roleRepository;
     }
 
     public List<User> findAll(){
@@ -29,6 +32,7 @@ public class UserService {
 
     @Transactional
     public void save(User user){
+        user.addRoleToUser(roleRepository.findByName("ROLE_USER").orElse(null));
         userRepository.save(user);
     }
 

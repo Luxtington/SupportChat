@@ -1,30 +1,30 @@
 package ru.luxtington.Chat.model;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-
-import java.util.ArrayList;
-import java.util.List;
 
 @Data
 @NoArgsConstructor
 @Entity
 public class Chat {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
     @ManyToOne
-    @JoinColumn(name = "user_id", referencedColumnName = "id")
-    private User user;
+    @JoinColumn(name = "author_id", referencedColumnName = "id")
+    private User author;
     @ManyToOne
     @JoinColumn(name = "interlocutor_id", referencedColumnName = "id")
     private User interlocutor;
-    @OneToMany(mappedBy = "chat")
-    private List<Message> allMessages = new ArrayList<>();
 
-    public Chat(User user, User interlocutor) {
-        this.user = user;
+    public Chat(User author, User interlocutor) {
+        this.author = author;
         this.interlocutor = interlocutor;
+    }
+
+    public void addMessage(@NotNull Message message){
+        message.setChat(this);
     }
 }
