@@ -7,6 +7,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+import ru.luxtington.Chat.exception.InvalidStatusException;
 import ru.luxtington.Chat.exception.UserNotFoundException;
 import ru.luxtington.Chat.model.User;
 import ru.luxtington.Chat.service.UserService;
@@ -30,8 +31,15 @@ public class UserController {
     }
 
     @GetMapping()
-    public ResponseEntity<List<User>> findAllUsers(){
-        return ResponseEntity.ok(userService.findAll());
+    public ResponseEntity<List<User>> findAllUsers(@RequestParam(required = false, defaultValue = "all") String status){
+        if (status.equals("all")){
+            return ResponseEntity.ok(userService.findAll());
+        } else if (status.equals("managers")){ // managers
+            return ResponseEntity.ok(userService.findAllManagers());
+        }
+        else{
+            throw new InvalidStatusException("Такого параметра поиска не существует");
+        }
     }
 
     @GetMapping("/{id}")
@@ -60,6 +68,12 @@ public class UserController {
     public ResponseEntity<Void> deleteUser(@PathVariable("id") Integer id){
         userService.deleteById(id);
         return ResponseEntity.noContent().build();
+    }
+
+    @PatchMapping("/{id}/assign")
+    public ResponseEntity<Void> assignUserAsManager(@PathVariable("id") Integer id){
+        userService.assignManagerRoleToUser(id);
+        return ResponseEntity.ok().build();
     }
 
     @ExceptionHandler

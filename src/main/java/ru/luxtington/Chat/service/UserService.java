@@ -8,6 +8,7 @@ import ru.luxtington.Chat.model.User;
 import ru.luxtington.Chat.repository.RoleRepository;
 import ru.luxtington.Chat.repository.UserRepository;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -24,6 +25,17 @@ public class UserService {
 
     public List<User> findAll(){
         return userRepository.findAll();
+    }
+
+    public List<User> findAllManagers(){
+        List<User> users = findAll();
+        List<User> managers = new ArrayList<>();
+        for (User u : users){
+            if (u.getRoles().contains(roleRepository.findByName("ROLE_MANAGER").orElse(null))){
+                managers.add(u);
+            }
+        }
+        return managers;
     }
 
     public User findById(Integer id) {
@@ -45,5 +57,11 @@ public class UserService {
     @Transactional
     public void deleteById(Integer id){
         userRepository.deleteById(id);
+    }
+
+    @Transactional
+    public void assignManagerRoleToUser(Integer userId){
+        User user = userRepository.findById(userId).orElseThrow(UserNotFoundException::new);
+        user.addRoleToUser(roleRepository.findByName("ROLE_MANAGER").orElse(null));
     }
 }

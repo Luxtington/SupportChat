@@ -65,7 +65,7 @@ public class User {
         this.password = password;
     }
 
-    public void addRoleToUser(Role role){
+    public void addRoleToUser(@NotNull Role role){
         roles.add(role);
     }
 
